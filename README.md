@@ -1,133 +1,111 @@
 # Simulador de Máquina de Turing
 
-Simulador em C# para Máquinas de Turing. A definição da máquina é lida em formato **JSON** e os testes de palavras são lidos de arquivos `.txt`. A saída informa no console se a palavra foi aceita (`1`) ou rejeitada (`0`) e grava a fita final num arquivo `.txt`.
+Este projeto implementa um simulador de Máquina de Turing em C#.
+A definição da máquina é lida a partir de um arquivo JSON e as entradas a partir de um arquivo `.in`.
+O simulador gera um arquivo de saída `.out.txt` com o conteúdo final da fita para cada entrada e imprime no console `1` (aceita) ou `0` (rejeita).
+---
+
+## Estrutura do projeto
+
+- `Definition.cs` → descreve a configuração da máquina (JSON).
+- `Parser.cs` → lê o JSON e cria a máquina.
+- `TuringMachine.cs` → lógica principal do simulador.
+- `State.cs` → representa estados e suas transições.
+- `Transition.cs` → representa uma transição individual.
+- `Tape.cs` → simula a fita infinita.
+- `Program.cs` → ponto de entrada, cuida da I/O (arquivos e console).
 
 ---
 
-## Funcionalidade das Classes
+## Formato do JSON
 
-- **`Transition`**
-  Representa uma única regra de transição. Contém informações sobre o estado de origem, o símbolo lido, o símbolo a ser escrito, a direção do movimento e o estado de destino.
-
-- **`State`**
-  Representa um estado da máquina. Armazena suas transições de forma otimizada num dicionário para acesso rápido.
-
-- **`Tape`**
-  Simula a fita infinita da máquina de forma eficiente, usando um dicionário que armazena apenas as células não-brancas.
-
-- **`TuringMachine`**
-  Orquestra toda a simulação. Carrega a configuração da máquina, gerencia o estado atual e a fita, e executa o ciclo de computação passo a passo.
-
-- **`JsonReader`**
-  Classe auxiliar que lê e interpreta o arquivo de entrada com os dados da máquina no formato JSON, utilizando a biblioteca `System.Text.Json`.
-
-- **`Program`**
-  Contém a classe principal (`Main`). Recebe os argumentos da linha de comando, chama as outras classes para executar os testes e gera a saída.
-
----
-
-## Rodando o Simulador
-
-### Requisitos
-
-- **.NET SDK** (versão 6.0 ou superior)
-
----
-
-### Instalação
-
-Para preparar o ambiente, coloque todos os ficheiros `.cs` fornecidos numa única pasta.
-
----
-
-### Execução
-
-A execução é feita através da interface de linha de comando do .NET. Para rodar o simulador, siga as etapas abaixo:
-
-1. **Prepare os arquivos de entrada:**
-   Na mesma pasta onde colocou os ficheiros `.cs`, adicione os seus arquivos de entrada:
-
-   - Um arquivo `.json` com a definição da máquina (ex: `maquina.json`).
-   - Um arquivo `.in` com as palavras de teste, uma por linha (ex: `problema.in`).
-
-2. **Navegue até o diretório do projeto no seu terminal:**
-
-   ```bash
-   cd caminho/para/o/projeto
-   ```
-
-3. **Inicialize o projeto (apenas na primeira vez):**
-
-   ```bash
-   dotnet new console
-   ```
-
-4. **Execute o simulador:**
-
-   ```bash
-   dotnet run -- maquina.json problema.in
-   ```
-
-   A saída será exibida no console (`1` ou `0`) e gravada num arquivo `saida_problema.in`.
-
----
-
-## Formato dos Arquivos
-
-### Arquivo de Especificações (`.json`)
+Exemplo (`duplo_bal.json`):
 
 ```json
 {
-    "initial" : 0,
-    "final" : [4],
-    "white" : "_",
-    "transitions" : [
-        {"from": 0, "to": 1, "read": "a", "write": "A", "dir":"R"},
-        {"from": 1, "to": 1, "read": "a", "write": "a", "dir":"R"},
-        {"from": 1, "to": 1, "read": "B", "write": "B", "dir":"R"},
-        {"from": 1, "to": 2, "read": "b", "write": "B", "dir":"L"},
-        {"from": 2, "to": 2, "read": "B", "write": "B", "dir":"L"},
-        {"from": 2, "to": 2, "read": "a", "write": "a", "dir":"L"},
-        {"from": 2, "to": 0, "read": "A", "write": "A", "dir":"R"},
-        {"from": 0, "to": 3, "read": "B", "write": "B", "dir":"R"},
-        {"from": 3, "to": 3, "read": "B", "write": "B", "dir":"R"},
-        {"from": 3, "to": 4, "read": "_", "write": "_", "dir":"L"}
-    ]
+  "initial": 0,
+  "final": [2],
+  "white": "_",
+  "transitions": [
+    { "from": 0, "to": 1, "read": "a", "write": "_", "dir": "R" },
+    { "from": 1, "to": 2, "read": "_", "write": "_", "dir": "R" }
+  ]
 }
+
 ```
+- `initial`: estado inicial
+- `final`: lista de estados finais (aceitação)
+- `white`: símbolo branco
+- `transitions`: lista de transições
 
-### Arquivo de Problema (`.in`)
+Cada transição contém:
+- `from`: estado de origem
+- `to`: estado de destino
+- `read`: símbolo a ser lido
+- `write`: símbolo a ser escrito
+- `dir`: direção (`L` ou `R`)
 
-```text
-aaabbb
+---
+## Formato do arquivo de entrada
+
+Um arquivo `.in` contendo uma entrada por linha.  
+Exemplo (`duplobal3.in`):
+
+```
 aabb
-ab
+abb
+aaabbb
 ```
 
-### Saída no Console
+---
 
-Uma linha por teste, indicando se foi aceite (`1`) ou não (`0`).
+## Como executar
 
-```text
+Compile e rode o projeto com `dotnet`:
+
+```sh
+dotnet run -- <def.json> <input.in>
+```
+
+- `<def.json>` → arquivo de definição da máquina (em JSON).
+- `<input.in>` → arquivo com entradas, uma por linha.
+
+O programa gera automaticamente o arquivo de saída `<input>.out.txt`.
+
+---
+
+## Saída
+
+- **Console**: imprime `1` se a entrada for aceita ou `0` se for rejeitada (uma linha por entrada).
+- **Arquivo `.out.txt`**: cada linha contém o conteúdo final da fita correspondente à entrada.
+
+.Exemplo:
+
+```sh
+dotnet run -- duplo_bal.json duplobal3.in
+```
+
+Console:
+```
+1
+0
 1
 ```
-```text
-0
+
+Arquivo `duplobal3.out.txt`:
+```
+__bb
+abb
+___
 ```
 
-### Saída no arquivo `saida_*.txt`
+---
 
-Gerado automaticamente com o resultado da fita para cada teste.
+## Regras e Validações
 
-```text
-Entrada: aaabbb
-Fita final: AABBB_
+- Apenas direções `L` e `R` são permitidas.
+- Estados finais não podem possuir transições de saída (será erro de definição).
+- Transições duplicadas para o mesmo símbolo em um estado também são erro.
+- Um limite de passos (1.000.000 por padrão) evita loops infinitos.
 
-Entrada: aabb
-Fita final: AABB
-
-Entrada: ab
-Fita final: AB_
-```
-.
 .---
