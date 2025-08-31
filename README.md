@@ -48,7 +48,7 @@ A execução é feita através da interface de linha de comando do .NET. Para ro
    Na mesma pasta onde colocou os ficheiros `.cs`, adicione os seus arquivos de entrada:
 
    - Um arquivo `.json` com a definição da máquina (ex: `maquina.json`).
-   - Um arquivo `.txt` com as palavras de teste, uma por linha (ex: `problema.txt`).
+   - Um arquivo `.in` com as palavras de teste, uma por linha (ex: `problema.in`).
 
 2. **Navegue até o diretório do projeto no seu terminal:**
 
@@ -65,10 +65,10 @@ A execução é feita através da interface de linha de comando do .NET. Para ro
 4. **Execute o simulador:**
 
    ```bash
-   dotnet run -- maquina.json problema.txt
+   dotnet run -- maquina.json problema.in
    ```
 
-   A saída será exibida no console (`1` ou `0`) e gravada num arquivo `saida_problema.txt`.
+   A saída será exibida no console (`1` ou `0`) e gravada num arquivo `saida_problema.in`.
 
 ---
 
@@ -96,7 +96,7 @@ A execução é feita através da interface de linha de comando do .NET. Para ro
 }
 ```
 
-### Arquivo de Problema (`.txt`)
+### Arquivo de Problema (`.in`)
 
 ```text
 aaabbb
