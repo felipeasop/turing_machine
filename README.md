@@ -18,15 +18,15 @@ Para que o programa funcione, organize os seus ficheiros numa única pasta da se
 
 ```
 /SeuProjeto/
-|-- Program.cs
-|-- TuringMachine.cs
-|-- Tape.cs
-|-- State.cs
-|-- Transition.cs
-|-- JsonReader.cs
+⌞ Program.cs
+⌞ TuringMachine.cs
+⌞ Tape.cs
+⌞ State.cs
+⌞ Transition.cs
+⌞ JsonReader.cs
 |
-|-- maquina.json      <-- O seu ficheiro de definição da máquina
-|-- entrada.in        <-- O seu ficheiro com as palavras a testar
+⌞ maquina.json      <-- Definição da máquina
+⌞ entrada.in        <-- Palavra de entrada
 ```
 
 ## Instruções de Execução
@@ -35,7 +35,7 @@ Siga estes passos simples para rodar o programa:
 
 ### Passo 1: Abrir o Terminal
 
-Abra a sua ferramenta de linha de comando preferida (Terminal, PowerShell, Prompt de Comando, etc.).
+Abra a linha de comando.
 
 ### Passo 2: Navegar até à Pasta do Projeto
 
