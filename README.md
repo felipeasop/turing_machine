@@ -1,27 +1,22 @@
 # Simulador de Máquina de Turing
 
-Este projeto implementa um simulador de Máquina de Turing em C#.
-A definição da máquina é lida a partir de um arquivo JSON e as entradas a partir de um arquivo `.in`.
-O simulador gera um arquivo de saída `.out.txt` com o conteúdo final da fita para cada entrada e imprime no console `1` (aceita) ou `0` (rejeita).
----
+Este projeto implementa um simulador de Máquina de Turing em C#. A definição da máquina é lida a partir de um arquivo JSON e as entradas a partir de um arquivo de texto (ex: .in). O simulador gera um arquivo de saída .txt com o conteúdo final da fita para cada entrada e imprime no console 1 (aceita) ou 0 (rejeita).
 
 ## Estrutura do projeto
 
-- `Definition.cs` → descreve a configuração da máquina (JSON).
-- `Parser.cs` → lê o JSON e cria a máquina.
-- `TuringMachine.cs` → lógica principal do simulador.
-- `State.cs` → representa estados e suas transições.
-- `Transition.cs` → representa uma transição individual.
-- `Tape.cs` → simula a fita infinita.
-- `Program.cs` → ponto de entrada, cuida da I/O (arquivos e console).
-
----
+-   **Specifications.cs**: Descreve a estrutura do arquivo de configuração da máquina (JSON).
+-   **Parser.cs**: Lê o arquivo JSON e cria a instância da máquina.
+-   **TuringMachine.cs**: Contém a lógica principal do simulador e o ciclo de execução.
+-   **State.cs**: Representa os estados e suas transições.
+-   **Transition.cs**: Representa uma transição individual da máquina.
+-   **Tape.cs**: Simula a fita infinita da máquina de turing.
+-   **Program.cs**: Executa tudo, responsável por ler os argumentos, arquivos e imprimir a saída.
 
 ## Formato do JSON
 
-Exemplo (`duplo_bal.json`):
+O arquivo de definição da máquina deve seguir este formato:
 
-```json
+``` json
 {
   "initial": 0,
   "final": [2],
@@ -31,81 +26,73 @@ Exemplo (`duplo_bal.json`):
     { "from": 1, "to": 2, "read": "_", "write": "_", "dir": "R" }
   ]
 }
-
-```
-- `initial`: estado inicial
-- `final`: lista de estados finais (aceitação)
-- `white`: símbolo branco
-- `transitions`: lista de transições
-
-Cada transição contém:
-- `from`: estado de origem
-- `to`: estado de destino
-- `read`: símbolo a ser lido
-- `write`: símbolo a ser escrito
-- `dir`: direção (`L` ou `R`)
-
----
-## Formato do arquivo de entrada
-
-Um arquivo `.in` contendo uma entrada por linha.  
-Exemplo (`duplobal3.in`):
-
-```
-aabb
-abb
-aaabbb
 ```
 
----
+-   **initial**: Estado inicial (inteiro).
+-   **final**: Lista de estados finais de aceitação (lista de inteiros).
+-   **white**: Caractere que representa um espaço em branco na fita.
+-   **transitions**: Lista contendo todas as transições da máquina.
 
-## Como executar
+Cada transição contém: - **from**: Estado de origem. - **to**: Estado de destino. - **read**: Símbolo a ser lido da fita. - **write**: Símbolo a ser escrito na fita. - *dir**: Direção do movimento do cabeçote (L para esquerda ou R para direita).
 
-Compile e rode o projeto com `dotnet`:
+## Formato do Arquivo de Entrada
 
-```sh
-dotnet run -- <def.json> <input.in>
+Um arquivo de texto (ex: .in) contendo uma cadeia de símbolos.
+
+**Exemplo (entradas.in):**
+
+  aaabbb
+
+## Como Executar
+
+### Requisitos
+
+- .NET SDK
+
+Para checar se está instalado basta abrir a linha de comandos e inserir o comando:
+
+```bash
+dotnet --version
 ```
 
-- `<def.json>` → arquivo de definição da máquina (em JSON).
-- `<input.in>` → arquivo com entradas, uma por linha.
+Caso já esteja na máquina
 
-O programa gera automaticamente o arquivo de saída `<input>.out.txt`.
+### Rodando o projeto
 
----
+Para compilar e executar o projeto, use o seguinte comando no terminal, dentro da pasta do projeto:
+
+``` bash
+dotnet run -- <arquivo_definicao.json> <arquivo_entrada.in>
+```
+
+-   `<arquivo_definicao.json>`: Caminho para o arquivo de definição da máquina.
+-   `<arquivo_entrada.in>`: Caminho para o arquivo com as cadeias de entrada.
+
+O programa irá gerar automaticamente o arquivo de saída na mesma pasta.
 
 ## Saída
 
-- **Console**: imprime `1` se a entrada for aceita ou `0` se for rejeitada (uma linha por entrada).
-- **Arquivo `.out.txt`**: cada linha contém o conteúdo final da fita correspondente à entrada.
+-   **Console**: Imprime 1 se a entrada for aceita ou 0 se for rejeitada (uma linha para cada entrada).
+-   **Arquivo de Saída**: É criado um arquivo `<nome_do_arquivo_de_entrada>.txt` com o conteúdo final da fita.
 
-.Exemplo:
+**Exemplo de execução:**
 
-```sh
-dotnet run -- duplo_bal.json duplobal3.in
+``` bash
+dotnet run -- definicao.json entrada.in
 ```
 
-Console:
-```
-1
-0
-1
-```
+**Saída no Console:**
 
-Arquivo `duplobal3.out.txt`:
-```
-__bb
-abb
-___
-```
+    1
+    60 ms (tempo de execução)
 
----
+**Conteúdo do arquivo entradas.txt:**
 
-## Regras e Validações
+    aaaabbcccc
 
-- Apenas direções `L` e `R` são permitidas.
-- Estados finais não podem possuir transições de saída (será erro de definição).
-- Transições duplicadas para o mesmo símbolo em um estado também são erro.
-- Um limite de passos (1.000.000 por padrão) evita loops infinitos.
+## Regras e Validações Implementadas
 
-.---
+-   **Direções Válidas**: Apenas as direções L (esquerda) e R (direita) são permitidas.
+-   **Transições em Estados Finais**: A definição da máquina é considerada inválida se um estado final possuir transições de saída.
+-   **Transições Duplicadas**: A definição é inválida se um mesmo estado possuir mais de uma transição para o mesmo símbolo de leitura.
+-   **Limite de Passos**: Para evitar loops infinitos, a execução de cada entrada é interrompida se exceder o limite de passos (pode ser alterado no código).
